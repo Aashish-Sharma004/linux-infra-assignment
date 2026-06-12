@@ -1,0 +1,18 @@
+Ini, TOML
+[Unit]
+Description=Infra Demo Python Health Service
+After=network.target
+
+[Service]
+Type=simple
+User=sysops
+Group=sysops
+
+EnvironmentFile=/etc/default/infra-demo.env
+
+ExecStart=/usr/bin/python3 -m http.server $PORT
+
+Restart=on-failure
+
+[Install}
+WantedBy=multi-user.target
