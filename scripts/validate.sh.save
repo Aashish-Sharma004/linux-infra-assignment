@@ -1,0 +1,43 @@
+cat << 'EOF' > scripts/validate.sh
+#!/bin/bash
+set -euo pipefail
+
+echo "========================================"
+echo " Running System Validation Checks..."
+echo "========================================"
+
+if id "sysops" &>/dev/null; then
+    echo "✓ User 'sysops' exists."
+else
+    echo "✗ User 'sysops' NOT FOUND."
+fi
+
+if sudo ufw status | grep -q "Status: active"; then
+    echo "✓ Firewall is active."
+else
+    echo "✗ Firewall is INACTIVE."
+fi
+
+if systemctl is-active --quiet infra-demo.service; then
+    echo "✓ infra-demo service is running."
+else
+    echo "✗ infra-demo service is NOT running."
+fi
+
+HTTP_STATUS=$(curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080 || echo "FAILED")
+if [ "$HTTP_STATUS" = "200" ]; then
+    echo "✓ HTTP health check passed (Status: 200)."
+else
+    echo "✗ HTTP health check failed (Status: $HTTP_STATUS)."
+fi
+
+if [ $(stat -c "%U" /var/www/infra-demo) = "sysops" ]; then
+    echo "✓ Web directory is securely owned by sysops."
+else
+    echo "✗ Web directory ownership is incorrect."
+fi
+
+echo "========================================"
+echo " Validation Complete!"
+echo "========================================"
+EOF
