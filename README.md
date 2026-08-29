@@ -1,4 +1,4 @@
-# Linux Infrastructure Intern Assignment
+# Linux Infrastructure Project
 
 ## Project Overview
 This repository contains automated provisioning and validation scripts to configure an Ubuntu-based Linux server. The automation is designed to be idempotent and handles system updates, security hardening, user management, and the deployment of a Python-based HTTP health service managed by systemd.
@@ -28,4 +28,4 @@ sudo ./scripts/provision.sh
 Run the validation script to verify all services and security rules are active.
 \`\`\`bash
 ./scripts/validate.sh
-\`\`\`
+
